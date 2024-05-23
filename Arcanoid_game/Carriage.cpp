@@ -32,7 +32,7 @@ namespace GameElements {
 		return (movesLeft)?-_direction : _direction;
 	};
 
-	Carriage::Carriage(sf::Vector2f size):sf::RectangleShape(size),_direction(180),_speed(10)
+	Carriage::Carriage(sf::Vector2f size):sf::RectangleShape(size),_direction(180),_speed(3)
 	{
 		setPosition(400, 700);
 		movesLeft = true;

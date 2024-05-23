@@ -13,7 +13,7 @@ namespace GameElements
 	class Bonus : public sf::CircleShape,public IMovable
 	{
 	private:
-		float const _speed = 1;
+		float const _speed = 0.2;
 		float const _direction = 90;
 		
 		void setSpeed(float speed);

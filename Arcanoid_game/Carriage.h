@@ -23,6 +23,7 @@ namespace GameElements {
         float _direction;
         bool movesLeft;
     public:
+        bool HasTemporaryBottom = false;
         bool isSticky()
         {
             return _isSticky;
@@ -34,7 +35,7 @@ namespace GameElements {
         {
             if (carriage == NULL)
             {
-                sf::Vector2f size(100, 30);
+                sf::Vector2f size(120, 30);
                 carriage = new Carriage(size);
             }
             return carriage;

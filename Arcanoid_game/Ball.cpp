@@ -5,13 +5,13 @@ namespace GameElements {
 
 	std::vector<Ball> Ball:: Balls;
 
-	Ball::Ball() : _speed(5), _direction(270), sf::CircleShape(10)
+	Ball::Ball() : _speed(0.5), _direction(90), sf::CircleShape(10)
 	{
-		this->setPosition(400, 700);
+		this->setPosition(400, 670);
 		this->setFillColor(sf::Color::Red);
 	};
 
-	Ball::Ball(sf::Vector2f pos) : sf::CircleShape(10), _speed(8), _direction(270)
+	Ball::Ball(sf::Vector2f pos) : sf::CircleShape(10), _speed(1), _direction(90)
 	{
 		setPosition(pos);
 		this->setFillColor(sf::Color::Red);

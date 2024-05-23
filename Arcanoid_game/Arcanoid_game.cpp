@@ -103,7 +103,7 @@ int main()
             if (checkCollision(ball, *carriage))
             {
                 float overlap = (ball.getPosition().x - carriage->getPosition().x) - (carriage->getSize().x / 2.f);
-                float reflectionAngle = (overlap / (carriage->getSize().x / 2.f)) * 60.f; // Reflect within a range of -60 to 60 degrees
+                float reflectionAngle = (overlap / (carriage->getSize().x / 2.f)) * 60.f; 
                 if (!carriage->isSticky())
                     ball.Collide(reflectionAngle);
                 else
@@ -115,12 +115,28 @@ int main()
                     ball.Collide(180 - 2 * ball.getDirection());
                 }
                 if (ball.getPosition().y - ball.getRadius() <= 0) {
-                    ball.Collide(-360);
+                    ball.Collide(-180);
                 }
                 if (ball.getPosition().y - ball.getRadius() >= 800) {
-                   // carriage->Shrink();
-                    ball.setPosition(400.f, 700.f);
-                    ball.Collide(-45.f);
+
+                    if (carriage->HasTemporaryBottom != true)
+                    {
+                        carriage->Shrink();
+                        ball.setPosition(400.f, 700.f);
+                        ball.Collide(90.f);
+                    }
+                    else
+                    {
+                        int WillDissapear = rand() % 4;
+                        if (WillDissapear == 1)
+                            carriage->HasTemporaryBottom = false;
+                        ball.Collide(180.f);
+                    }
+                    
+                }
+                if (ball.getPosition().y - ball.getRadius() <= 0) {
+                    ball.setPosition(ball.getPosition().x, ball.getRadius());
+                    ball.Collide(-180);
                 }
             }
             else
@@ -134,7 +150,7 @@ int main()
                         ball.Collide(90);
                         PlayerScore++;
                         if ((**it).getFillColor() == sf::Color::Yellow)
-                            ball.setSpeed(ball.getSpeed() + 1);
+                            ball.setSpeed(ball.getSpeed() + 0.05);
                         if ((**it).WasHitAndDestroyed())
                         {
                             Blocks.remove(*it);
@@ -151,6 +167,20 @@ int main()
                 
         }
         
+        for (auto& ball1 : Balls)
+        {
+            for (auto& ball2 : Balls)
+            {
+                if (ge::checkCollision(ball1, ball2))
+                {
+                    float overlap = (ball1.getPosition().x - ball2.getPosition().x) - (ball2.getRadius() / 2.f);
+                    float reflectionAngle = (overlap / (ball2.getRadius() / 2.f)) * 60.f;
+                    ball1.Collide(-reflectionAngle);
+                    ball2.Collide(reflectionAngle);
+                }
+            }
+        }
+
         std::list<ge::Bonus*>::iterator it = Bonuses.begin();
         while(it != Bonuses.end() )
         {
@@ -183,7 +213,7 @@ int main()
 
         window.display();
          
-        sf::Time tm(sf::seconds(0.01));
+        sf::Time tm(sf::seconds(0.001));
             
         sf::sleep(tm);
 

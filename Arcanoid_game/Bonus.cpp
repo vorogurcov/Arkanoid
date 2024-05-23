@@ -46,7 +46,7 @@ namespace GameElements
 		std::vector<Ball> balls = Ball::getBalls();
 		for (auto& ball : balls)
 		{
-			ball.setSpeed(ball.getSpeed() + 2);
+			ball.setSpeed(ball.getSpeed() + 0.2);
 		}
 	};
 
@@ -61,7 +61,8 @@ namespace GameElements
 
 	void GiveTemporaryBottom::ReleaseBonus()
 	{
-
+		Carriage* car = Carriage::getInstance();
+		car->HasTemporaryBottom = true;
 	};
 	
 	void SpawnNewBall::ReleaseBonus()

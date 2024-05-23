@@ -16,11 +16,11 @@ namespace GameElements
 
 	Bonus* Block::SpawnBonus()
 	{
-		int num = rand() % 1;
+		int num = rand() % 10;
 		sf::Vector2f blockPos = this->getPosition();
-		if (true)
+		if (num < 2)
 		{
-			int type = 2;
+			int type = rand() % 5;
 			switch (type)
 			{
 			case 0:
