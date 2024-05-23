@@ -1,24 +1,52 @@
 #include <SFML/Graphics.hpp>
 #include "GameElements.h"
 #include "IMovable.h"
+
 namespace ge = GameElements;
 
-
+void LoseStickness(ge::Ball& b,int& time)
+{
+    ge::Carriage* car = ge::Carriage::getInstance();
+    if (time > 500) {
+        car->MakeNotSticky();
+        b.MakeNotSticky();
+        time = 0;
+    }
+}
 
 int main()
 {
     srand(time(0));
-    
+    int PlayerScore = 0;
+    int time = 0;
+   
+
     sf::RenderWindow window(sf::VideoMode(800, 800), "Arcanoid", sf::Style::Close);
-    
     ge::Ball startBall;
-    std::vector<ge::Ball> Balls;
+    ge::Ball::setBalls();
+    std::vector<ge::Ball>& Balls = ge::Ball::getBalls();
     std::list<ge::Block*> Blocks = ge::CreateBlocks();
+    std::list<ge::Bonus*> Bonuses;
     Balls.push_back(startBall);
+
     
+    ge::Carriage* carriage = ge::Carriage::getInstance();
+
+    sf::Font font;
+    if (!font.loadFromFile("D:/Projects/cpp/Arcanoid_game/font/Roboto-Black.ttf")) {
+        std::cerr << "Error loading font\n";
+        return -1;
+    }
+
     while (window.isOpen())
     {
-        
+     
+        sf::Text text;
+        text.setString(std::to_string(PlayerScore));
+        text.setCharacterSize(30);
+        text.setPosition(750, 750);
+        text.setFont(font);
+        text.setFillColor(sf::Color::Black);
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -28,26 +56,73 @@ int main()
                 window.close();
             }
             
+            
 
         }
             
         window.clear(sf::Color(217, 221, 220));
+
+        window.draw(*carriage);
 
         for (auto& el : Blocks)
         {
             window.draw(*el);
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            carriage->MoveLeft();
+            carriage->move();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            carriage->MoveRight();
+            carriage->move();
+        }
 
+        
         for (auto& ball : Balls)
         {
-            ball.move();
+            if (!ball.isSticky)
+                ball.move();
+            else {
+                ball.setPosition(carriage->getPosition());
+                time++;
+                LoseStickness(ball,time);
+
+            }
+        }
+
+        for (auto& bonus : Bonuses)
+        {
+            (*bonus).move();
         }
 
         for (auto& ball : Balls)
         {
-            if (checkWallCollision(ball, window))
-                ball.Collide();
+            if (checkCollision(ball, *carriage))
+            {
+                float overlap = (ball.getPosition().x - carriage->getPosition().x) - (carriage->getSize().x / 2.f);
+                float reflectionAngle = (overlap / (carriage->getSize().x / 2.f)) * 60.f; // Reflect within a range of -60 to 60 degrees
+                if (!carriage->isSticky())
+                    ball.Collide(reflectionAngle);
+                else
+                    ball.Stick();
+            }
+            else if (checkWallCollision(ball, window))
+            {
+                if (ball.getPosition().x - ball.getRadius() <= 0 || ball.getPosition().x + ball.getRadius() >= 800) {
+                    ball.Collide(180 - 2 * ball.getDirection());
+                }
+                if (ball.getPosition().y - ball.getRadius() <= 0) {
+                    ball.Collide(-360);
+                }
+                if (ball.getPosition().y - ball.getRadius() >= 800) {
+                   // carriage->Shrink();
+                    ball.setPosition(400.f, 700.f);
+                    ball.Collide(-45.f);
+                }
+            }
             else
             {
               
@@ -56,9 +131,18 @@ int main()
 
                     if (checkCollision(ball, **it))
                     {
-                        ball.Collide();
+                        ball.Collide(90);
+                        PlayerScore++;
+                        if ((**it).getFillColor() == sf::Color::Yellow)
+                            ball.setSpeed(ball.getSpeed() + 1);
                         if ((**it).WasHitAndDestroyed())
+                        {
                             Blocks.remove(*it);
+                            PlayerScore += 5;
+                            break;
+                        }
+                        if ((**it).GetBonus() != NULL)
+                            Bonuses.push_back((**it).GetBonus());
                         break;
                     }
                     
@@ -67,10 +151,35 @@ int main()
                 
         }
         
+        std::list<ge::Bonus*>::iterator it = Bonuses.begin();
+        while(it != Bonuses.end() )
+        {
+            if (ge::checkCollision(**it, *carriage))
+            {
+                carriage->collidesWithBonus(*it);
+                it = Bonuses.erase(it);
+
+            }
+            else if (ge::checkWallCollision(**it, window))
+            {
+                delete* it;
+                it = Bonuses.erase(it);
+
+            }
+            else
+                ++it;
+            
+        }
+
         for (auto& ball : Balls)
         {
             window.draw(ball);
         }
+        for (auto& bonus : Bonuses)
+        {
+            window.draw(*bonus);
+        }
+        window.draw(text);
 
         window.display();
          

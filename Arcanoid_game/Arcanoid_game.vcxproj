@@ -134,12 +134,14 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bonus.cpp" />
+    <ClCompile Include="Carriage.cpp" />
     <ClCompile Include="GameFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bonus.h" />
+    <ClInclude Include="Carriage.h" />
     <ClInclude Include="GameElements.h" />
     <ClInclude Include="GameFunctions.h" />
     <ClInclude Include="IMovable.h" />

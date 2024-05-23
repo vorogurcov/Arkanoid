@@ -14,6 +14,8 @@ namespace GameElements {
 	public:
 		Block(sf::Vector2f const size);
 		bool WasHitAndDestroyed();
+		Bonus* GetBonus();
+		Bonus* SpawnBonus();
 		~Block() = 0;
 	};
 
@@ -39,6 +41,12 @@ namespace GameElements {
 	{
 	public:
 		MagentaBlock(sf::Vector2f const size);
+	};
+
+	class SpeedBlock : public Block
+	{
+	public:
+		SpeedBlock(sf::Vector2f const size);
 	};
 }
 #endif // !BLOCK_H

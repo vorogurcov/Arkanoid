@@ -17,19 +17,25 @@ namespace GameElements {
 	class Ball :public sf::CircleShape, public IMovable
 	{
 	private:
-		bool isSticky = false;
+		static std::vector<Ball> Balls;
 		Ball(sf::Vector2f pos);
 		float _speed;
 		float _direction;
-		void setSpeed(float speed);
+		
 		void setDirection(float angle);
 	public:
+		void MakeNotSticky();
+		bool isSticky = false;
+		static void setBalls();
+		static std::vector<Ball>& getBalls();
+		void setSpeed(float speed);
 		friend class SpawnNewBall;
 		friend class ChangeStickness;
 		friend class ChangeBallSpeed;
-
+		void Stick();
 		Ball();
-		void Collide();
+		void Collide(float direction);
+	
 		void move();
 		float getSpeed() const;
 		float getDirection() const;

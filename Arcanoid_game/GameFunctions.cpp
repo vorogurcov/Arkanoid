@@ -18,16 +18,19 @@ namespace GameElements
 
     static Block* CreateOneBlock(sf::Vector2f size)
     {
-        int num = rand() % 13;
+        int num = rand() % 15;
         sf::Color BlockColor;
         if (num >= 0 && num < 5)
             return new WhiteBlock(size);
         else if (num >= 5 && num < 9)
             return new BlueBlock(size);
-        else if (num >= 9 && num < 12)
+        else if (num >= 9 && num < 13)
             return new RedBlock(size);
+        else if (num >= 13 && num < 14)
+            return new SpeedBlock(size);
         else
             return new MagentaBlock(size);
+           
     }
 
     std::list<Block*> CreateBlocks()

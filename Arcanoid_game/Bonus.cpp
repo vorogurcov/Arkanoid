@@ -1,5 +1,6 @@
 #include "Bonus.h"
 #include "Ball.h"
+#include "Carriage.h"
 
 namespace GameElements
 {
@@ -33,25 +34,38 @@ namespace GameElements
 		return _speed;
 	}
 
+	
 	void ChangeStickness::ReleaseBonus()
 	{
-		
+		Carriage* car = Carriage::getInstance();
+		car->_isSticky = true;
 	};
 
 	void ChangeBallSpeed::ReleaseBonus()
 	{
-
+		std::vector<Ball> balls = Ball::getBalls();
+		for (auto& ball : balls)
+		{
+			ball.setSpeed(ball.getSpeed() + 2);
+		}
 	};
 
 	void ChangeCarriageSize::ReleaseBonus()
 	{
+		Carriage* car = Carriage::getInstance();
+		sf::Vector2f size = car->getSize();
+		size.x *= 1.2;
+		size.y *= 1.1;
+		car->setSize(size);
 	};
 
 	void GiveTemporaryBottom::ReleaseBonus()
 	{
+
 	};
 	
 	void SpawnNewBall::ReleaseBonus()
 	{
+		Ball::getBalls().push_back(*new Ball());
 	};
 }

@@ -1,13 +1,17 @@
 #include "Ball.h"
+#include "Carriage.h"
 #include "cmath"
 namespace GameElements {
-	Ball::Ball() : _speed(10), _direction(270), sf::CircleShape(10)
+
+	std::vector<Ball> Ball:: Balls;
+
+	Ball::Ball() : _speed(5), _direction(270), sf::CircleShape(10)
 	{
 		this->setPosition(400, 700);
 		this->setFillColor(sf::Color::Red);
 	};
 
-	Ball::Ball(sf::Vector2f pos) : sf::CircleShape(10), _speed(10), _direction(270)
+	Ball::Ball(sf::Vector2f pos) : sf::CircleShape(10), _speed(8), _direction(270)
 	{
 		setPosition(pos);
 		this->setFillColor(sf::Color::Red);
@@ -41,8 +45,28 @@ namespace GameElements {
 		return _direction;
 	}
 
-	void Ball::Collide()
+	void Ball::Collide(float direction)
 	{
-		setDirection(getDirection() + 90);
+		setDirection(getDirection() + direction);
 	}
+
+	void Ball::setBalls()
+	{
+		Balls = *new std::vector<Ball>;
+	}
+
+	std::vector<Ball>& Ball::getBalls()
+	{
+		return Balls;
+	};
+
+	void Ball::Stick()
+	{
+		isSticky = true;
+	};
+
+	void Ball::MakeNotSticky()
+	{
+		isSticky = false;
+	};
 }

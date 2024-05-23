@@ -9,9 +9,46 @@ namespace GameElements
 		setOutlineThickness(3);
 	};
 
+	Bonus* Block::GetBonus()
+	{
+		return _bns;
+	};
+
+	Bonus* Block::SpawnBonus()
+	{
+		int num = rand() % 1;
+		sf::Vector2f blockPos = this->getPosition();
+		if (true)
+		{
+			int type = 2;
+			switch (type)
+			{
+			case 0:
+				return new ChangeBallSpeed(blockPos);
+				break;
+			case 1:
+				return new ChangeCarriageSize(blockPos);
+				break;
+			case 2:
+				return new ChangeStickness(blockPos);
+				break;
+			case 3:
+				return new GiveTemporaryBottom(blockPos);
+				break;
+			case 4:
+				return new SpawnNewBall(blockPos);
+				break;
+			}
+		}
+		else
+			return NULL;
+	}
+
 	bool Block::WasHitAndDestroyed()
 	{
 		hitsToBreak--;
+		
+		_bns = SpawnBonus();
 		if (hitsToBreak == 0)
 		{
 			delete this;
@@ -55,4 +92,13 @@ namespace GameElements
 		_bns = NULL;
 		setFillColor(sf::Color::Blue);
 	}
+
+	SpeedBlock::SpeedBlock(sf::Vector2f const size) : Block(size)
+	{
+		hitsToBreak = 4;
+		_bns = new ChangeBallSpeed(getPosition());
+		setFillColor(sf::Color::Yellow);
+	}
+
+	
 }
